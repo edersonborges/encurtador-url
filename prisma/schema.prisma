@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // Troque para o banco que está usando (ex. mysql, sqlite)
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  name          String
+  email         String   @unique
+  password      String
+  urls          Url[]    @relation("UserUrls")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  deletedAt     DateTime? // Soft delete
+}
+
+model Url {
+  id            Int      @id @default(autoincrement())
+  originalUrl   String
+  shortUrl      String   @unique @db.VarChar(6) // No máximo 6 caracteres
+  userId        Int?     // Chave estrangeira opcional para o usuário que criou a URL
+  user          User?    @relation("UserUrls", fields: [userId], references: [id])
+  clicks        Click[]  @relation("UrlClicks")
+  clickCount    Int      @default(0) // Contador de cliques para listagem
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  deletedAt     DateTime? // Soft delete
+}
+
+model Click {
+  id            Int      @id @default(autoincrement())
+  urlId         Int
+  url           Url      @relation("UrlClicks", fields: [urlId], references: [id])
+  clickedAt     DateTime @default(now())
+}

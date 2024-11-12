@@ -1,0 +1,19 @@
+# Ignorar arquivos compilados
+/dist/
+/out/
+/build/
+
+# Ignorar arquivos de configuração
+/tsconfig.json
+/tsconfig.*.json
+
+# Ignorar arquivos de dependências instaladas
+/node_modules/
+
+# Ignorar arquivos temporários
+*.tmp
+*.log
+
+
+
+.env
