@@ -7,7 +7,7 @@ class CreateUserController {
   constructor(createUserService: CreateUserService) {
     this.createUserService = createUserService;
   }
-  async handle(req: Request, res: Response): Promise<void> {
+  async handle(req: Request, res: Response) {
     const { name, email, password } = req.body;
 
     try {
