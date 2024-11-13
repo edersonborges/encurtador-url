@@ -1,10 +1,10 @@
 import express, { Request, Response, NextFunction } from "express";
 import "express-async-errors";
+import swaggerUi from 'swagger-ui-express'
 import cors from "cors";
 import { PORT } from "./configs/config";
 import { router } from "./routes";
-import swaggerUi from 'swagger-ui-express';
-import swaggerFile from '../swagger_output.json';
+import swaggerFile from './swagger.json'
 
 const app = express();
 const port = PORT || 5003;
@@ -12,6 +12,8 @@ const port = PORT || 5003;
 
 app.use(express.json());
 app.use(cors());
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // Middleware para logar as requisições
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -32,7 +34,7 @@ app.get("/", (req: Request, res: Response) => {
 // Rotas da aplicação
 app.use(router);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
 
 // Middleware de tratamento de erros
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
