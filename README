@@ -31,12 +31,14 @@ Antes de rodar o projeto, é necessário ter instalado em sua máquina:
 ```bash
 git clone https://seu-repositorio.git
 cd encurtador-url
+```
 
 Configuração do Docker
 Certifique-se de que o Docker esteja instalado e funcionando. O projeto utiliza o Docker Compose para levantar os serviços.
 
 Configuração do ambiente
 Crie um arquivo .env na raiz do projeto com as seguintes variáveis de ambiente:
+```env
     DATABASE_URL=postgresql://user:password@db:5432/mydatabase
     JWT_SECRET=seu-segredo-aqui
     REDIS_HOST=redis
@@ -45,11 +47,15 @@ Crie um arquivo .env na raiz do projeto com as seguintes variáveis de ambiente:
     POSTGRES_USER=user
     POSTGRES_PASSWORD=password
     POSTGRES_DB=mydatabase
-
+```
 
 Levantando os containers
 Execute o comando abaixo para rodar o projeto utilizando o Docker Compose:
+
+```bash
     docker-compose up --build
+```
+
 Isso irá construir e iniciar os containers necessários: a aplicação (app), o banco de dados (db) e o Redis (redis).
 
 Acessando a aplicação
