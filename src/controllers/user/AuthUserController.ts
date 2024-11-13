@@ -8,44 +8,6 @@ class AuthUserController {
     this.authUserService = authUserService;
   }
 
-  /**
-   * @swagger
-   * /login:
-   *   post:
-   *     summary: Autentica um usuário
-   *     tags: [Auth]
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             properties:
-   *               email:
-   *                 type: string
-   *               password:
-   *                 type: string
-   *     responses:
-   *       200:
-   *         description: Autenticação bem-sucedida
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 id:
-   *                   type: integer
-   *                 name:
-   *                   type: string
-   *                 email:
-   *                   type: string
-   *                 token:
-   *                   type: string
-   *       400:
-   *         description: Credenciais inválidas
-   *       500:
-   *         description: Erro interno do servidor
-   */
   async handle(req: Request, res: Response): Promise<void> {
     const { email, password } = req.body;
 
