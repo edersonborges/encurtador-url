@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "nodemon --exec ts-node src/server.ts",
-    "generate-doc": "npx swagger-jsdoc -d ./src/swagger/swaggerConfig.js -o ./swagger_output.json"
+    "swagger": "ts-node swagger.js"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +23,9 @@
     "nodemon": "^3.1.7",
     "prisma": "^5.22.0",
     "redis": "^4.7.0",
-    "swagger-autogen": "^2.23.7"
+    "swagger-autogen": "^2.23.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

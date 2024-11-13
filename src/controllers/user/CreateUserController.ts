@@ -7,41 +7,6 @@ class CreateUserController {
   constructor(createUserService: CreateUserService) {
     this.createUserService = createUserService;
   }
-
-  /**
-   * @swagger
-   * /cadastrar:
-   *   post:
-   *     summary: Cadastra um novo usuário
-   *     tags: [User]
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             properties:
-   *               name:
-   *                 type: string
-   *               email:
-   *                 type: string
-   *               password:
-   *                 type: string
-   *     responses:
-   *       201:
-   *         description: Usuário criado com sucesso
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 success:
-   *                   type: boolean
-   *                 data:
-   *                   $ref: '#/components/schemas/User'
-   *       500:
-   *         description: Erro interno do servidor
-   */
   async handle(req: Request, res: Response): Promise<void> {
     const { name, email, password } = req.body;
 
