@@ -8,7 +8,7 @@ class AuthUserController {
     this.authUserService = authUserService;
   }
 
-  async handle(req: Request, res: Response): Promise<void> {
+  async handle(req: Request, res: Response){
     const { email, password } = req.body;
 
     try {

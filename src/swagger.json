@@ -132,6 +132,62 @@
           }
         }
       }
+    },
+    "/encurtar": {
+      "post": {
+        "summary": "Encurta uma URL",
+        "tags": ["URL"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "originalUrl": { "type": "string", "example": "https://exemplo.com/longo-url" }
+                },
+                "required": ["originalUrl"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "URL encurtada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "originalUrl": { "type": "string", "example": "https://exemplo.com/longo-url" },
+                        "shortUrl": { "type": "string", "example": "aZbKq7" },
+                        "userId": { "type": "integer", "example": 1, "nullable": true }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string", "example": "Internal server error" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
