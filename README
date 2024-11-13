@@ -1,0 +1,96 @@
+# Encurtador de URL
+
+Este projeto implementa um serviço de encurtamento de URLs com funcionalidades de autenticação via JWT e integração com Redis para gerenciamento de tokens invalidados. O sistema permite o cadastro de usuários, login e encurtamento de URLs com ou sem autenticação.
+
+## Funcionalidades
+
+- **Autenticação:** Utiliza JWT para autenticar usuários e garantir o acesso a rotas protegidas.
+- **Encurtamento de URL:** Permite que os usuários encurtem URLs e, no caso de usuários autenticados, associem o link ao seu `user_id`.
+- **Banco de dados:** O sistema utiliza o PostgreSQL para armazenar dados dos usuários e URLs encurtadas.
+- **Redis:** Usado para gerenciar a invalidade de tokens JWT.
+
+## Tecnologias Utilizadas
+
+- **Node.js** (Express) para o servidor.
+- **PostgreSQL** para o banco de dados relacional.
+- **Redis** para o gerenciamento de tokens inválidos.
+- **JWT** para autenticação de usuários.
+- **Prisma** para manipulação do banco de dados.
+
+## Pré-requisitos
+
+Antes de rodar o projeto, é necessário ter instalado em sua máquina:
+
+- [Docker](https://www.docker.com/get-started)
+- [Node.js](https://nodejs.org/en/download/)
+
+## Como Rodar o Projeto
+
+### 1. Clone o repositório
+
+```bash
+git clone https://seu-repositorio.git
+cd encurtador-url
+
+Configuração do Docker
+Certifique-se de que o Docker esteja instalado e funcionando. O projeto utiliza o Docker Compose para levantar os serviços.
+
+Configuração do ambiente
+Crie um arquivo .env na raiz do projeto com as seguintes variáveis de ambiente:
+    DATABASE_URL=postgresql://user:password@db:5432/mydatabase
+    JWT_SECRET=seu-segredo-aqui
+    REDIS_HOST=redis
+    REDIS_PORT=6379
+    PORT=3000
+    POSTGRES_USER=user
+    POSTGRES_PASSWORD=password
+    POSTGRES_DB=mydatabase
+
+
+Levantando os containers
+Execute o comando abaixo para rodar o projeto utilizando o Docker Compose:
+    docker-compose up --build
+Isso irá construir e iniciar os containers necessários: a aplicação (app), o banco de dados (db) e o Redis (redis).
+
+Acessando a aplicação
+Após os containers estarem rodando, você poderá acessar a aplicação no seguinte endereço:
+
+Servidor da aplicação: http://localhost:3000
+Documentação Swagger (se configurada): http://localhost:3000/api-docs
+Interagindo com a API
+Autenticação
+Para se autenticar, envie uma requisição POST para /user/login com o seguinte corpo:
+    {
+    "email": "seu-email@dominio.com",
+    "password": "sua-senha"
+    }
+
+O servidor retornará um token JWT que deve ser enviado no header das requisições subsequentes para acessar rotas protegidas.
+
+Encurtar URL
+Para encurtar uma URL, envie uma requisição POST para /url/encurtar com o seguinte corpo:
+
+{
+  "originalUrl": "https://www.exemplo.com"
+}
+Se o usuário estiver autenticado, a URL será associada ao seu user_id.
+
+
+Comandos úteis
+
+Parar containers:
+docker-compose down
+
+Rebuild dos containers:
+docker-compose up --build
+
+Acessar o banco de dados diretamente:
+docker exec -it encurtador-url-db psql -U user -d mydatabase
+
+Estrutura do Projeto
+src/: Contém o código fonte da aplicação.
+controllers/: Contém os controladores das rotas.
+services/: Contém os serviços responsáveis pela lógica de negócio.
+middlewares/: Contém os middlewares de autenticação e outros.
+prisma/: Contém o arquivo de esquema do Prisma e suas migrações.
+utils/: Contém utilitários, como funções auxiliares e integração com Redis.

@@ -12,4 +12,6 @@ COPY . .
 RUN npm run build
 RUN chmod +x /app/entrypoint.sh
 
+ENTRYPOINT ["/app/entrypoint.sh"]
+
 CMD ["npm", "start"]

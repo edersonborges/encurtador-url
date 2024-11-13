@@ -8,8 +8,15 @@ interface AuthRequest {
   password: string;
 }
 
+interface AuthResponse {
+  id: number;
+  name: string;
+  email: string;
+  token: string;
+}
+
 class AuthUserService {
-  async execute({ email, password }: AuthRequest) {
+  async execute({ email, password }: AuthRequest): Promise<AuthResponse | string> {
     const user = await prismaClient.user.findFirst({
       where: {
         email,
@@ -17,16 +24,19 @@ class AuthUserService {
       },
     });
 
+    // Verifica se o usuário não existe ou se a senha está incorreta
     if (!user || !(await compare(password, user.password))) {
       return 'Usuário ou senha incorretos. Tente novamente.';
     }
 
     const jwtSecret = JWT_SECRET;
 
+    // Verifica se a chave secreta do JWT está configurada
     if (!jwtSecret) {
       return 'Chave secreta JWT não definida.';
     }
 
+    // Cria o token JWT
     const token = sign(
       {
         name: user.name,
@@ -35,10 +45,11 @@ class AuthUserService {
       jwtSecret,
       {
         subject: user.id.toString(),
-        expiresIn: '1d',
+        expiresIn: '1d', // Expira após 1 dia
       }
     );
 
+    // Retorna as informações do usuário e o token gerado
     return {
       id: user.id,
       name: user.name,

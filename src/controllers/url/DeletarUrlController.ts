@@ -10,10 +10,10 @@ class DeletarUrlController {
 
   async handle(req: Request, res: Response) {
     const { urlId } = req.params;
-    const userId = req.user_id;
+    const userId = req.user_id ? Number(req.user_id) : undefined;;
 
     if (typeof userId !== 'number') {
-      res.status(400).json({ error: 'User ID is required and must be a number' });
+      res.status(400).json({ error: 'Voce nao tem permissao para deletar URLs' });
       return;
     }
 

@@ -9,6 +9,10 @@ interface UserRequest {
 
 class CreateUserService {
   async execute({ name, email, password }: UserRequest) {
+    const existingUserByEmail = await prismaClient.user.findUnique({ where: { email } });
+    if (existingUserByEmail) {
+        return 'O Email informado já está em uso por outro usuário.';
+    }
     const hashedPassword = await hash(password, 8);
 
     const user = await prismaClient.user.create({

@@ -20,7 +20,7 @@ class EditarUrlService {
       },
     });
 
-    if (url.count === 0) throw new Error("URL not found or not accessible");
+    if (url.count === 0) throw new Error("URL nao encontrada ou nao pertence a voce");
 
     return { message: "URL updated successfully" };
   }
