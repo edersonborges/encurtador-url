@@ -8,7 +8,7 @@ import swaggerFile from './swagger.json'
 
 const app = express();
 const port = PORT || 5003;
-
+console.log(`Servidor rodando na porta ${port}`);
 
 app.use(express.json());
 app.use(cors());

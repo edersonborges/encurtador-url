@@ -1,15 +1,64 @@
 version: '3.8'
+
 services:
-  postgres:
-    image: postgres:13
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: encurtador-url-app
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
+      - DATABASE_URL=postgresql://user:password@db:5432/mydatabase
+      - JWT_SECRET=touCQMaMegO1U9bD31ucJB0zxMNxJszDEEhWn1g96QYwRFqziPtPINfysEHx7FTM
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  db:
+    image: postgres:14
+    container_name: encurtador-url-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: mydatabase
     ports:
       - "5432:5432"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d mydatabase"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  redis:
+    image: redis:alpine
+    container_name: encurtador-url-redis
+    ports:
+      - "6379:6379"
+    expose:
+      - "6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
 
 volumes:
-  postgres-data:
+  db-data:
+
+networks:
+  app-network:
+    driver: bridge
