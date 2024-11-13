@@ -7,13 +7,13 @@ services:
       dockerfile: Dockerfile
     container_name: encurtador-url-app
     environment:
-      - DATABASE_URL=postgresql://user:password@db:5432/mydatabase
-      - JWT_SECRET=touCQMaMegO1U9bD31ucJB0zxMNxJszDEEhWn1g96QYwRFqziPtPINfysEHx7FTM
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - PORT=3000
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - PORT=${PORT}
     ports:
-      - "3000:3000"
+      - "${PORT}:${PORT}"
     depends_on:
       db:
         condition: service_healthy
@@ -26,15 +26,15 @@ services:
     image: postgres:14
     container_name: encurtador-url-db
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydatabase
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d mydatabase"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
