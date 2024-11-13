@@ -1,18 +1,17 @@
 import express, { Request, Response, NextFunction } from "express";
 import "express-async-errors";
 import cors from "cors";
-import swaggerUi from "swagger-ui-express";
-import swaggerFile from "../swagger_output.json";
 import { PORT } from "./configs/config";
 import { router } from "./routes";
 
 const app = express();
 const port = PORT || 5003;
 
+
 app.use(express.json());
 app.use(cors());
 
-// Middleware para log de requisições
+// Middleware para logar as requisições
 app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   res.on("finish", () => {
@@ -23,21 +22,26 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// Rota de documentação da API com Swagger
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
+// Rota inicial para verificação do servidor
+app.get('/', (req: Request, res: Response) => {
+  res.send('Server is running');
+});
 
-// Adicionando o router principal para as rotas
+// Rotas da aplicação
 app.use(router);
 
 // Middleware de tratamento de erros
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof Error) {
     console.error(`[${new Date().toISOString()}] Error: ${err.message}`);
-    return res.status(400).json({ error: err.message });
+    res.status(400).json({ error: err.message });
+  } else {
+    console.error(`[${new Date().toISOString()}] Internal Server Error`);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error.",
+    });
   }
-
-  console.error(`[${new Date().toISOString()}] Internal Server Error`);
-  return res.status(500).json({ status: "error", message: "Internal server error." });
 });
 
 // Inicializa o servidor
