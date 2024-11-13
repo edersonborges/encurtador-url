@@ -10,7 +10,7 @@
     }
   },
   "paths": {
-    "/cadastrar": {
+    "/user/cadastrar": {
       "post": {
         "summary": "Cadastra um novo usuário",
         "tags": ["User"],
@@ -68,7 +68,7 @@
         }
       }
     },
-    "/login": {
+    "/user/login": {
       "post": {
         "summary": "Autentica um usuário",
         "tags": ["Auth"],
@@ -133,7 +133,46 @@
         }
       }
     },
-    "/encurtar": {
+    "/user/logout": {
+      "post": {
+        "summary": "Realiza o logout do usuário",
+        "tags": ["Auth"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logout realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string", "example": "Logout realizado com sucesso" }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string", "example": "Internal server error" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/url/encurtar": {
       "post": {
         "summary": "Encurta uma URL",
         "tags": ["URL"],
@@ -168,6 +207,265 @@
                         "userId": { "type": "integer", "example": 1, "nullable": true }
                       }
                     }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string", "example": "Internal server error" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/url/listar": {
+      "get": {
+        "summary": "Lista todas as URLs do usuário autenticado",
+        "tags": ["URL"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "URLs listadas com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer", "example": 1 },
+                          "originalUrl": { "type": "string", "example": "https://exemplo.com/longo-url" },
+                          "shortUrl": { "type": "string", "example": "aZbKq7" },
+                          "clickCount": { "type": "integer", "example": 5 },
+                          "createdAt": { "type": "string", "format": "date-time", "example": "2023-01-01T12:00:00Z" },
+                          "updatedAt": { "type": "string", "format": "date-time", "example": "2023-01-02T12:00:00Z" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string", "example": "Internal server error" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/url/editar/{urlId}": {
+      "put": {
+        "summary": "Edita a URL original de uma URL encurtada",
+        "tags": ["URL"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "urlId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "ID da URL para ser editada"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "originalUrl": { "type": "string", "example": "https://exemplo.com/nova-url" }
+                },
+                "required": ["originalUrl"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "URL editada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "integer", "example": 1 },
+                        "originalUrl": { "type": "string", "example": "https://exemplo.com/nova-url" },
+                        "shortUrl": { "type": "string", "example": "aZbKq7" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "URL não encontrada ou não pertence ao usuário",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string", "example": "URL não encontrada ou não pertence ao usuário" }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string", "example": "Internal server error" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta uma URL (soft delete)",
+        "tags": ["URL"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "urlId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "ID da URL para ser deletada"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "URL deletada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "URL deletada com sucesso." }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "URL não encontrada ou já excluída",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string", "example": "URL não encontrada ou já excluída." }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string", "example": "Internal server error" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{shortUrl}": {
+      "get": {
+        "summary": "Redireciona para a URL original",
+        "tags": ["URL"],
+        "parameters": [
+          {
+            "name": "shortUrl",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "aZbKq7"
+            },
+            "description": "Código da URL encurtada"
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirecionamento para a URL original",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string",
+                  "example": "https://exemplo.com/longo-url"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "URL não encontrada ou excluída",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string", "example": "URL não encontrada ou excluída." }
                   }
                 }
               }
