@@ -10,6 +10,7 @@ class EditarUrlController {
 
   async handle(req: Request, res: Response) {
     const { urlId } = req.params;
+    
     const { newOriginalUrl } = req.body;
     const userId = req.user_id ? Number(req.user_id) : undefined;
 
@@ -17,7 +18,6 @@ class EditarUrlController {
       res.status(400).json({ error: 'User ID is required and must be a valid number' });
       return;
     }
-
     try {
       const result = await this.editarUrlService.execute({
         userId,

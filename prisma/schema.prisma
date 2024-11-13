@@ -16,20 +16,20 @@ model User {
   urls          Url[]    @relation("UserUrls")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  deletedAt     DateTime? // Soft delete
+  deletedAt     DateTime?
 }
 
 model Url {
   id            Int      @id @default(autoincrement())
   originalUrl   String
   shortUrl      String   @unique @db.VarChar(6) // No máximo 6 caracteres
-  userId        Int?     // Chave estrangeira opcional para o usuário que criou a URL
+  userId        Int?     
   user          User?    @relation("UserUrls", fields: [userId], references: [id])
   clicks        Click[]  @relation("UrlClicks")
   clickCount    Int      @default(0) // Contador de cliques para listagem
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  deletedAt     DateTime? // Soft delete
+  deletedAt     DateTime?
 }
 
 model Click {
